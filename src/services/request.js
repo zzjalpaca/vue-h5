@@ -6,7 +6,7 @@
 import axios from 'axios'; // 引入axios
 import Qs from 'qs'; // 引入qs模块，用来序列化post类型的数据
 import { autoMatch, checkStatus } from './utils'; // 附近处理函数
-import { Toast } from 'mint-ui'; // 提示框
+import { Toast } from 'vant'; // 提示框
 
 // 创建axios实例
 const instance = axios.create({

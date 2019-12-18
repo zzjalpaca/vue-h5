@@ -1,103 +1,74 @@
 <template>
-  <section class="page-hello">
-    <div class="page-content">
-      <div class="msg-area common-msg-area">
-        <p class="msg-title" v-text="msg"></p>
-        <!-- <img src="~@/assets/images/logo.png"> -->
-        <div class="user-img"></div>
-        <h3 class="app-name">
-          vue-h5-pro
-          <i class="iconfont iconRN-recommend"></i>
-        </h3>
-        <p class="user-desc">欢迎访问本项目，本项目是基于@Vue/CLI3构建的移动端h5项目模板，内容持续完善...</p>
-        <p>你的支持是我前进最大的推力！</p>
-        <div class="icons-link">
-          <a href>
-            <i class="iconfont iconRN-edit"></i>
-          </a>
-          <a href="https://www.yuque.com/nowthen/longroad">
-            <i class="iconfont iconRN-yuque"></i>
-          </a>
-          <a href="https://github.com/now1then/vue-h5-pro">
-            <i class="iconfont iconRN-git"></i>
-          </a>
-          <a href="https://juejin.im/user/5a323f2851882552e652b7ef/posts">
-            <i class="iconfont iconRN-juejin"></i>
-          </a>
-        </div>
-        <h2 class="time-area">
-          现在时间是：
-          <show-time />
-        </h2>
-      </div>
-
-      <div class="common-msg-area urls-area">
-        <h3 class="title">项目页面链接：</h3>
-        <ul class="list-ul">
-          <template v-for="item in routerList">
-            <li v-if="item.name" :key="item.name" class="list-li">
-              <router-link
-                :to="item.path"
-                class="url-link"
-              >{{(item.meta && item.meta.title) || item.name}}</router-link>
-            </li>
-          </template>
-        </ul>
-      </div>
-      <p>点击后tip提示</p>
-      <main-button btn-text="确定" :btn-disabled="false" @handle-click="handleNext" />
+  <div>
+    <div>点赞数：{{supportNum}}</div>
+    <div>反对数：{{againstNum}}</div>
+    <div v-for="item in listData" :key="item.id">
+      <div>{{item.name}}</div>
+      <div>{{item.status}}</div>
+      <van-radio-group v-model="item.status">
+        <van-radio name="1" checked-color="#07c160" @click="support(item.id, item.status)">赞成</van-radio>
+        <van-radio name="0" checked-color="#07c160" @click="against(item.id, item.status)">反对</van-radio>
+      </van-radio-group>
     </div>
-    <base-tip v-model="tip.show" :text="tip.text" :type="tip.type" />
-  </section>
+
+  </div>
 </template>
 
-<script type="text/babel">
-import ShowTime from '@/component_modules/ShowTime';
-import MainButton from '@/component_basics/MainButton';
-import BaseTip from '@/component_basics/BaseTip';
-// 组件
+<script>
+import Vue from 'vue';
+import { RadioGroup, Radio } from 'vant';
+
+Vue.use(RadioGroup);
+Vue.use(Radio);
 export default {
-  name: 'page-hello',
-  components: {
-    ShowTime,
-    MainButton,
-    BaseTip
-  },
   data() {
     return {
-      tip: {
-        show: false,
-        text: '欢迎多多点击！',
-        type: 'success'
-      },
-      msg: '欢迎访问!',
-      start: false,
-      routerList: [],
-      interval_timer: null
-    };
+      supportNum: 0,
+      againstNum: 0,
+      radio: '1',
+      listData: [
+        {
+          id: 1,
+          name: '庆余年',
+          status: '1'
+        },
+        {
+          id: 2,
+          name: '庆余年11',
+          status: '1'
+        },
+        {
+          id: 3,
+          name: '庆余年12',
+          status: '1'
+        },
+        {
+          id: 4,
+          name: '庆余年13',
+          status: '1'
+        }
+      ]
+    }
   },
-  created() {
-    this.routerList = this.$router.options.routes.filter(
-      item => item.path !== this.$route.path
-    );
+  mounted() {
+    this.getNum()
   },
   methods: {
-    handleNext() {
-      const types = [
-        { type: 'info', text: '欢迎多多点击！' },
-        { type: 'success', text: '恭喜点击成功了！' },
-        { type: 'warning', text: '警告，警告...' },
-        { type: 'error', text: '错误提示：点击次数超限！' }
-      ];
-      const random = Math.floor(Math.random() * 4);
-      this.tip.show = true;
-      this.tip.text = types[random].text;
-      this.tip.type = types[random].type;
+    support(id, status) {
+      this.getNum()
+    },
+    against(id, status) {
+      this.getNum()
+    },
+    getNum() {
+      let supportData = this.listData.filter(item => item.status === '1')
+      this.supportNum = supportData.length
+      this.againstNum = this.listData.length - this.supportNum
     }
-  }
-};
+  },
+}
 </script>
 
-<style lang="less" rel="stylesheet/less" >
-@import './style.less';
+<style lang="less" scoped>
+
 </style>
